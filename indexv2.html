@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- css -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- font -->
+   
+
+    <title>Text To Slides/HomePage</title>
+        
+        <script defer>
+            let slideIndex = 1;
+            showSlides(slideIndex);
+            
+            function plusSlides(n) {
+              showSlides(slideIndex += n);
+            }
+            
+            function currentSlide(n) {
+              showSlides(slideIndex = n);
+            }
+            
+            function showSlides(n) {
+              let i;
+              let slides = document.getElementsByClassName("mySlides");
+              if (n > slides.length) {slideIndex = 1}    
+              if (n < 1) {slideIndex = slides.length}
+              for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";  
+              }
+              slides[slideIndex-1].style.display = "flex";  
+              dots[slideIndex-1].className += " active";
+            }
+            </script>
+</head>
+<body id="main-body">
+    
+   <div id="main-container">
+    <div class="settings">
+        <textarea name="pallavi" id="textInputpallavi" cols="60" rows="5" class="pallavi" placeholder="pallavi"></textarea>
+        <input type="text" id="replace-this" placeholder="find this">
+        <input type="text" id="replace-to" placeholder="replace to">
+        <button class="replace" type="reset" onclick="replaceTo()">replace</button>
+        <br>
+        <br>
+        <input type="text" name="color1" id="c1" placeholder="color1">
+        <input type="text" name="color2" id="c2" placeholder="color2">
+        <input type="text" name="angle" id="cangle" placeholder="angle" value="90deg">
+        <button id="setColor" onclick="setGradient()">set color</button>
+    </div>
+    <form action="" id="form">
+        <input type="submit" value="Get Slides">
+        <textarea name="text-input" id="textInput" cols="60" rows="20" class="text-input" placeholder="paste lyrics here!!!"></textarea>
+    </form>
+</div>
+    <div class="slideshow-container" id="slide-container" >   
+
+    </div>
+    <script>
+
+        let form = document.getElementById('form');
+        document.addEventListener('keydown',(e)=>{
+                if(e.keyCode === 37){
+                    plusSlides(-1);
+                }else if(e.keyCode === 39){
+                    plusSlides(1);
+                }
+        });
+        function setGradient(){
+            let gradElement = document.getElementById("main-body");
+            let c1 = document.getElementById("c1");
+            let c2 = document.getElementById("c2");
+            let cangle = document.getElementById("cangle");
+            // body.style.background="linear-gradient("+ cangle.value+", " 
+            //     + c1.value 
+            //     + ", " 
+            //     + c2.value 
+            //     + ")";
+            // css.textContent = body.style.background + ";";
+            gradElement.style.background = `linear-gradient(${cangle.value}, ${c1.value}, ${c2.value})`;
+        }
+        function replaceTo(){
+            let find = document.getElementById("replace-this").value;
+            console.log("find: ",find);
+            let replaceTo = document.getElementById("replace-to").value;
+            console.log("replaceTo: ",replaceTo);
+            let content = document.getElementById("textInput");
+            let modifiedContent = content.value.replaceAll(find,replaceTo);
+            content.value = modifiedContent;
+            console.log("textContent After: ",modifiedContent);
+        }
+        form.addEventListener('submit', function(e){
+            window.open('slidetest.html',"_blank");
+            e.preventDefault();
+            let textInput = document.getElementById('textInput').value;
+            console.log('textInput = '+ textInput);
+            let textSplitted = textInput.split('\n\n');
+
+            const node = document.getElementById("slide-container");
+            
+
+            for(i in textSplitted){
+                console.log('i is '+ textSplitted[i]);
+                localStorage.setItem('textValue', textSplitted[i]);
+
+                // Create a text node:
+                const textnode = document.createElement("pre");
+                textnode.className ="mySlides fade";
+                textnode.innerHTML = textSplitted[i];
+                textnode.setAttribute('contenteditable','true');
+                // Append the text node to the "li" node:
+                node.appendChild(textnode);
+                i++;
+            }
+            document.getElementById("main-container").style.display="none";
+        });
+    </script>
+</body>
+</html>
